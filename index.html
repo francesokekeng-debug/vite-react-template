@@ -434,6 +434,18 @@ body{overflow-x:hidden}
   burger.addEventListener('click', () => { const o = nav.classList.toggle('open'); burger.setAttribute('aria-expanded', o); burger.textContent = o ? 'Close' : 'Menu'; });
   nav.addEventListener('click', e => { if (e.target.tagName === 'A') { nav.classList.remove('open'); burger.setAttribute('aria-expanded', false); burger.textContent = 'Menu'; } });
 
+  // muted background snippet from YouTube (skipped for reduced motion)
+  const bgv = document.getElementById('bgv'), vid = bgv.dataset.id;
+  if (!reduce) {
+    const q = new URLSearchParams({autoplay:1, mute:1, controls:0, loop:1, playlist:vid, playsinline:1,
+      modestbranding:1, rel:0, disablekb:1, iv_load_policy:3, start:bgv.dataset.start, end:bgv.dataset.end});
+    const f = document.createElement('iframe');
+    f.src = `https://www.youtube-nocookie.com/embed/${vid}?${q}`;
+    f.allow = 'autoplay; encrypted-media'; f.tabIndex = -1; f.title = '';
+    f.addEventListener('load', () => setTimeout(() => bgv.classList.add('ready'), 900));
+    bgv.appendChild(f);
+  }
+
   // showreel dialog: full video with sound, loaded only when opened
   const dlg = document.getElementById('reel'), slot = document.getElementById('reel-slot');
   document.querySelector('[data-reel]').addEventListener('click', () => {
