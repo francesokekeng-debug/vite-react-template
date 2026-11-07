@@ -129,7 +129,8 @@ h2{font:700 clamp(2.4rem,5.2vw,4.6rem)/.92 var(--display);margin:0 0 20px;text-w
 
 /* ---------- founder ---------- */
 .founder{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(32px,6vw,96px);align-items:center}
-.portrait{aspect-ratio:4/5;background:var(--oxblood-2);border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:.9rem;text-align:center;padding:24px;position:relative}
+.portrait{aspect-ratio:4/5;margin:0;position:relative}
+.portrait img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 20%;border-radius:3px;box-shadow:0 40px 80px rgba(0,0,0,.45)}
 .portrait::after{content:"";position:absolute;right:-14px;bottom:-14px;width:72px;height:72px;border-radius:50%;background:var(--signal)}
 .founder .role{color:var(--dim);margin:0 0 28px}
 .founder p{max-width:58ch}
@@ -312,7 +313,7 @@ body{overflow-x:hidden}
   <!-- FOUNDER -->
   <section id="founder" aria-labelledby="founder-title">
     <div class="shell founder">
-      <div class="portrait">[Portrait of Albrin Junior, 4:5]</div>
+      <figure class="portrait"><img src="img/albrin-junior.jpg" alt="Portrait of Albrin Junior" loading="lazy" width="800" height="1000"></figure>
       <div>
         <h2 id="founder-title">Albrin Junior</h2>
         <p class="role">Founder and managing director. Writer, director, producer.</p>
