@@ -1,14 +1,472 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<link rel="icon" type="image/svg+xml" href="/vite.svg" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Vite + React + TS</title>
-	</head>
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rev Media — Independent film production, Glasgow</title>
+<meta name="description" content="Rev Media Ltd is an independent film production company in Glasgow making films about identity, migration and belonging.">
+<meta name="theme-color" content="#3D0610">
+<meta property="og:title" content="Rev Media — Independent film production, Glasgow">
+<meta property="og:description" content="Films about who we become when we leave home.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23D7192A'/%3E%3Ccircle cx='32' cy='32' r='19' fill='none' stroke='%23F7EBC6' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='8' fill='%23F7EBC6'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --oxblood:#3D0610;      /* base */
+  --oxblood-2:#520A16;    /* raised surfaces */
+  --signal:#D7192A;       /* brand red: lens, actions */
+  --butter:#F7EBC6;       /* type on dark, paper */
+  --white:#FFFFFF;
+  --ink:#1E0307;          /* text on butter */
+  --dim:rgba(247,235,198,.62);
+  --line:rgba(247,235,198,.16);
+  --display:'Big Shoulders Display', 'Arial Narrow', sans-serif;
+  --body:'Instrument Sans', system-ui, sans-serif;
+  --gutter:clamp(20px,4vw,56px);
+  --max:1360px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--oxblood);color:var(--butter);font:400 17px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+img,svg{display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--butter);outline-offset:4px;border-radius:2px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:16px;top:16px;z-index:99;background:var(--butter);color:var(--ink);padding:8px 14px}
+.shell{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
 
-	<body>
-		<div id="root"></div>
-		<script type="module" src="/src/react-app/main.tsx"></script>
-	</body>
+/* grain over everything: a film-stock texture, very low opacity */
+body::after{content:"";position:fixed;inset:-50%;pointer-events:none;z-index:50;opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 1s steps(4) infinite}
+@keyframes grain{25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-1%,3%)}}
+
+/* ---------- header ---------- */
+.top{position:fixed;inset:0 0 auto;z-index:40;transition:background .3s}
+.top.solid{background:rgba(61,6,16,.94);backdrop-filter:blur(10px)}
+.top .shell{display:flex;align-items:center;justify-content:space-between;height:76px}
+.mark{display:flex;align-items:center;gap:12px;text-decoration:none}
+.mark svg{width:36px;height:36px}
+.mark b{font:700 1.5rem/1 var(--display);letter-spacing:.01em}
+.nav{display:flex;align-items:center;gap:34px}
+.nav a{text-decoration:none;font-size:.95rem;color:var(--dim);transition:color .2s}
+.nav a:hover{color:var(--butter)}
+.nav .cta{color:var(--butter);border:1px solid var(--butter);padding:9px 18px;border-radius:40px}
+.nav .cta:hover{background:var(--butter);color:var(--ink)}
+.burger{display:none;background:none;border:0;color:var(--butter);font:500 1rem var(--body);cursor:pointer;padding:8px}
+
+/* ---------- hero: the letterbox ---------- */
+.hero{min-height:100svh;display:grid;align-content:center;padding:110px 0 56px}
+.frame{position:relative;aspect-ratio:2.39/1;width:100%;overflow:hidden;background:#140205}
+.frame .still{position:absolute;inset:0;
+  background:
+   radial-gradient(60% 90% at 72% 55%,rgba(215,25,42,.55),transparent 70%),
+   radial-gradient(40% 60% at 22% 40%,rgba(247,235,198,.12),transparent 70%),
+   linear-gradient(180deg,#2A040A,#140205);
+  transform:scale(1.08);animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:scale(1)}}
+.bg-video{position:absolute;inset:0;overflow:hidden;opacity:0;transition:opacity 1.2s}
+.bg-video.ready{opacity:1}
+.bg-video iframe{position:absolute;top:50%;left:50%;border:0;pointer-events:none;
+  width:max(100%, calc(100cqh * 16 / 9));height:max(100%, calc(100cqw * 9 / 16));transform:translate(-50%,-50%) scale(1.15)}
+.frame{container-type:size}
+.frame .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(61,6,16,.15),rgba(61,6,16,.45));pointer-events:none}
+.reel{border:0;padding:0}
+.reel iframe{width:100%;height:100%;border:0}
+.frame .ph{position:absolute;left:24px;bottom:20px;font-size:.8rem;color:var(--dim)}
+.frame .tc{position:absolute;right:24px;bottom:20px;font:500 .85rem var(--body);font-variant-numeric:tabular-nums;color:var(--dim)}
+/* the bars that open on load: the one orchestrated moment */
+.frame::before,.frame::after{content:"";position:absolute;left:0;right:0;height:50%;background:var(--oxblood);z-index:2;transition:transform 1.6s cubic-bezier(.7,0,.2,1)}
+.frame::before{top:0}.frame::after{bottom:0}
+.open .frame::before{transform:translateY(-100%)}
+.open .frame::after{transform:translateY(100%)}
+.play{position:absolute;inset:0;margin:auto;width:112px;height:112px;border-radius:50%;border:1px solid var(--butter);background:rgba(61,6,16,.35);color:var(--butter);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;cursor:pointer;z-index:1;font:500 .82rem var(--body);transition:background .25s,transform .25s}
+.play:hover{background:var(--signal);transform:scale(1.04)}
+.play svg{width:20px;height:20px}
+
+.hero-text{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:var(--gutter);align-items:end;margin-top:36px}
+h1{font:900 clamp(3rem,8.4vw,8.4rem)/.86 var(--display);margin:0;letter-spacing:-.005em;text-wrap:balance}
+.hero-text p{margin:0;max-width:38ch;color:var(--dim);font-size:1.05rem}
+.hero-text p strong{color:var(--butter);font-weight:500}
+
+/* ---------- section scaffolding ---------- */
+section{padding:clamp(80px,12vw,160px) 0}
+h2{font:700 clamp(2.4rem,5.2vw,4.6rem)/.92 var(--display);margin:0 0 20px;text-wrap:balance}
+.lede{color:var(--dim);max-width:52ch;margin:0}
+
+/* ---------- films: editorial index ---------- */
+.films-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:48px;flex-wrap:wrap}
+.index{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.index li{border-bottom:1px solid var(--line)}
+.row{display:grid;grid-template-columns:90px minmax(0,1fr) 220px 160px;gap:24px;align-items:baseline;padding:30px 0;text-decoration:none;position:relative}
+.row .yr{color:var(--dim);font-variant-numeric:tabular-nums}
+.row .title{font:700 clamp(2rem,4.6vw,4.2rem)/.95 var(--display);transition:color .25s, transform .35s cubic-bezier(.2,.7,.2,1)}
+.row .fmt,.row .st{color:var(--dim);font-size:.95rem}
+.row .st{text-align:right}
+.row:hover .title,.row:focus-visible .title{color:var(--signal);transform:translateX(12px)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--signal);margin-right:8px;vertical-align:1px}
+.dot.dev{background:transparent;border:1.5px solid var(--butter)}
+/* cursor-following still (desktop only) */
+.peek{position:fixed;width:260px;pointer-events:none;z-index:30;opacity:0;transform:translate(36px,-50%) scale(.92) rotate(-2deg);transition:opacity .25s,transform .35s;border-radius:4px;overflow:hidden;
+  display:flex;align-items:flex-end;padding:18px;font:700 1.6rem/1 var(--display);color:var(--butter);box-shadow:0 30px 60px rgba(0,0,0,.45)}
+.peek.on{opacity:1;transform:translate(36px,-50%) scale(1) rotate(-2deg)}
+.peek small{position:absolute;top:16px;left:18px;font:400 .72rem var(--body);color:var(--dim)}
+.k1{background:linear-gradient(170deg,#7A0D1A,#D7192A 60%,#F09A6C)}
+.k2{background:linear-gradient(170deg,#1E0307,#6E0C18 55%,#C8A15E)}
+.k3{background:repeating-linear-gradient(135deg,#3D0610 0 16px,#520A16 16px 32px)}
+.mobile-still{display:none}
+.peek{padding:0}.peek img{display:block;width:100%;height:auto}
+.row .credit{display:block;margin-top:10px;font-size:.92rem;color:var(--dim);max-width:52ch}
+.books{border-top:1px solid var(--line);padding-top:28px;margin-top:36px}
+.books h3{font:500 .9rem var(--body);color:var(--dim);margin:0 0 18px}
+.shelf{display:grid;grid-template-columns:repeat(2,minmax(0,180px));gap:28px}
+.shelf figure{margin:0}
+.shelf{align-items:start}.shelf img{width:100%;height:auto;border-radius:2px;box-shadow:0 18px 40px rgba(0,0,0,.45);transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+.shelf figure:hover img{transform:translateY(-6px) rotate(-1deg)}
+.shelf figcaption{margin-top:14px;font-size:.88rem;line-height:1.4;color:var(--dim)}
+.shelf figcaption b{display:block;font:700 1.15rem/1.05 var(--display);color:var(--butter);margin-bottom:6px}
+
+/* ---------- statement ---------- */
+.statement{background:var(--butter);color:var(--ink)}
+.statement .big{font:700 clamp(2.2rem,5vw,4.4rem)/1 var(--display);max-width:20ch;margin:0 0 64px;text-wrap:balance}
+.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,4vw,64px);border-top:2px solid var(--ink);padding-top:28px}
+.cols h3{font:700 1.7rem/1 var(--display);margin:0 0 10px}
+.cols p{margin:0;color:#4D2329}
+
+/* ---------- founder ---------- */
+.founder{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(32px,6vw,96px);align-items:center}
+.portrait{aspect-ratio:4/5;background:var(--oxblood-2);border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:.9rem;text-align:center;padding:24px;position:relative}
+.portrait::after{content:"";position:absolute;right:-14px;bottom:-14px;width:72px;height:72px;border-radius:50%;background:var(--signal)}
+.founder .role{color:var(--dim);margin:0 0 28px}
+.founder p{max-width:58ch}
+blockquote{margin:36px 0;padding:0;font:500 clamp(1.6rem,2.8vw,2.3rem)/1.1 var(--display);color:var(--white);max-width:26ch}
+blockquote cite{display:block;margin-top:12px;font:400 .85rem var(--body);color:var(--dim);font-style:normal}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;border-top:1px solid var(--line);padding-top:24px;margin-top:36px}
+.facts b{display:block;font:700 1.25rem/1.1 var(--display);margin-bottom:4px}
+.facts span{font-size:.9rem;color:var(--dim)}
+
+/* ---------- services: a production schedule, genuinely sequential ---------- */
+.schedule{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:56px;border-top:1px solid var(--line)}
+.stage{padding:28px 28px 8px 0;position:relative}
+.stage::before{content:"";position:absolute;top:-5px;left:0;width:9px;height:9px;border-radius:50%;background:var(--signal)}
+.stage .n{font:500 .85rem var(--body);color:var(--dim);font-variant-numeric:tabular-nums}
+.stage h3{font:700 2rem/1 var(--display);margin:8px 0 10px}
+.stage p{margin:0;color:var(--dim);font-size:.96rem;max-width:30ch}
+
+/* ---------- contact ---------- */
+.contact{background:var(--signal);color:var(--white)}
+.contact .shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,6vw,96px)}
+.mail{display:inline-block;font:900 clamp(2rem,3.4vw,3.2rem)/1 var(--display);text-decoration:none;border-bottom:3px solid currentColor;margin:28px 0 40px;word-break:break-word}
+.mail:hover{color:var(--butter)}
+.where{display:grid;grid-template-columns:1fr 1fr;gap:24px;font-size:.98rem}
+.where h3{font:500 .85rem var(--body);opacity:.75;margin:0 0 6px}
+.where p{margin:0}
+form{background:var(--oxblood);color:var(--butter);padding:clamp(24px,3vw,40px);border-radius:6px;display:grid;gap:18px;align-self:start}
+form .pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+label{display:block;font-size:.85rem;color:var(--dim);margin-bottom:6px}
+input,select,textarea{width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--butter);font:400 1rem var(--body);padding:10px 0;border-radius:0}
+select option{color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:none;border-bottom-color:var(--butter)}
+textarea{min-height:110px;resize:vertical}
+.send{justify-self:start;background:var(--butter);color:var(--ink);border:0;border-radius:40px;padding:14px 28px;font:600 1rem var(--body);cursor:pointer;transition:background .2s}
+.send:hover{background:var(--white)}
+.status{font-size:.88rem;color:var(--dim);margin:0;min-height:1.4em}
+
+/* ---------- footer: a poster billing block ---------- */
+footer{padding:80px 0 40px;text-align:center}
+.billing{font:500 clamp(.95rem,1.6vw,1.25rem)/1.15 var(--display);letter-spacing:.02em;max-width:880px;margin:0 auto 18px;color:var(--dim);text-transform:uppercase;transform:scaleY(1.25)}
+.billing b{color:var(--butter);font-weight:900}
+.legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;border-top:1px solid var(--line);padding-top:24px;margin-top:56px;font-size:.85rem;color:var(--dim)}
+.legal a{text-decoration:none}.legal a:hover{color:var(--butter)}
+.social{display:flex;gap:22px}
+
+/* ---------- reel modal ---------- */
+dialog{border:0;padding:0;background:transparent;width:min(1100px,92vw);color:var(--butter)}
+dialog::backdrop{background:rgba(20,2,5,.92)}
+.reel{aspect-ratio:16/9;background:#140205;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--dim);padding:24px;border:1px dashed var(--line)}
+.close{display:block;margin:0 0 12px auto;background:none;border:0;color:var(--butter);font:500 1rem var(--body);cursor:pointer}
+
+/* ---------- responsive ---------- */
+@media (max-width:980px){
+  .row{grid-template-columns:64px minmax(0,1fr);row-gap:6px}
+  .row .fmt{grid-column:2}.row .st{grid-column:2;text-align:left}
+  .schedule{grid-template-columns:1fr 1fr;row-gap:24px}
+  .founder,.contact .shell,.hero-text{grid-template-columns:1fr}
+  .cols{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .nav{position:fixed;inset:76px 0 auto;background:var(--oxblood);flex-direction:column;align-items:flex-start;gap:22px;padding:28px var(--gutter) 36px;display:none;border-bottom:1px solid var(--line)}
+  .nav.open{display:flex}
+  .nav a{font-size:1.2rem}
+  .burger{display:block}
+  .frame{aspect-ratio:4/5}
+  .play{width:92px;height:92px}
+  .peek{display:none}
+  .mobile-still{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:4px;margin:0 0 16px}
+  .shelf{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+  .schedule,.facts,form .pair,.where{grid-template-columns:1fr}
+  .frame .ph{display:none}
+  .portrait::after{right:12px;bottom:12px;width:48px;height:48px}
+  .mail{font-size:1.9rem}
+}
+body{overflow-x:hidden}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top" id="top">
+  <div class="shell">
+    <a class="mark" href="#main" aria-label="Rev Media, home">
+      <!-- Logo: a lens seen head-on, with an aperture ring -->
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="30" fill="#D7192A"/>
+        <circle cx="32" cy="32" r="21" fill="none" stroke="#F7EBC6" stroke-width="2.5"/>
+        <g stroke="#F7EBC6" stroke-width="2.5" stroke-linecap="round">
+          <path d="M32 11 L38 26"/><path d="M53 32 L38 38"/><path d="M32 53 L26 38"/><path d="M11 32 L26 26"/>
+        </g>
+        <circle cx="32" cy="32" r="7" fill="#3D0610"/>
+      </svg>
+      <b>Rev Media</b>
+    </a>
+    <button class="burger" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="#films">Films</a>
+      <a href="#studio">Studio</a>
+      <a href="#founder">Founder</a>
+      <a href="#process">Process</a>
+      <a class="cta" href="#contact">Get in touch</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="shell">
+      <div class="frame">
+        <div class="still" aria-hidden="true"></div>
+        <!-- Background snippet: change data-start / data-end (seconds) to pick the section that loops -->
+        <div class="bg-video" id="bgv" data-id="S0Dw1kp8J2k" data-start="0" data-end="15" aria-hidden="true"></div>
+        <div class="shade" aria-hidden="true"></div>
+        <button class="play" data-reel aria-label="Play showreel">
+          <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5 3l12 7-12 7z"/></svg>
+          Showreel
+        </button>
+        <span class="tc" aria-hidden="true" id="tc">00:00:00:00</span>
+      </div>
+      <div class="hero-text">
+        <h1 id="hero-title">Films about who we become when we leave home.</h1>
+        <p><strong>Rev Media Ltd</strong> is an independent film production company in Glasgow, making short and feature films about identity, migration and belonging.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILMS -->
+  <section id="films" aria-labelledby="films-title">
+    <div class="shell">
+      <div class="films-head">
+        <h2 id="films-title">Films</h2>
+        <p class="lede">Shorts made for festivals and the audiences who find them there.</p>
+      </div>
+      <ul class="index">
+        <li>
+          <a class="row" href="#contact" data-img="img/from-glasgow-without-love.jpg">
+            <span class="yr">2026</span>
+            <span><img class="mobile-still" src="img/from-glasgow-without-love.jpg" alt="" loading="lazy" style="object-position:50% 30%"><span class="title">From Glasgow Without Love</span><span class="credit">Adapted by Albrin Junior from his book of the same name</span></span>
+            <span class="fmt">Short drama · 14 min</span>
+            <span class="st"><span class="dot"></span>Complete</span>
+          </a>
+        </li>
+        <li>
+          <a class="row" href="#contact" data-img="img/hadassah.jpg">
+            <span class="yr">2022</span>
+            <span><img class="mobile-still" src="img/hadassah.jpg" alt="" loading="lazy" style="object-position:50% 58%"><span class="title">Hadassah</span><span class="credit">With Asa'ah Samuel and Tomisin Ayoade. Produced by Albrin Junior and Olamide Ogunleye</span></span>
+            <span class="fmt">Short drama</span>
+            <span class="st"><span class="dot"></span>Festival run</span>
+          </a>
+        </li>
+        <li>
+          <a class="row" href="#contact">
+            <span class="yr">[Year]</span>
+            <span><span class="title">[Next project title]</span><span class="credit">[One-line logline]</span></span>
+            <span class="fmt">[Format · length]</span>
+            <span class="st"><span class="dot dev"></span>In development</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <div class="peek" id="peek" aria-hidden="true"><img alt=""></div>
+
+  <!-- STUDIO -->
+  <section class="statement" id="studio" aria-labelledby="studio-title">
+    <div class="shell">
+      <h2 id="studio-title" class="big">We take stories from the page to the screen, and from Glasgow to wherever they need to be seen.</h2>
+      <div class="cols">
+        <div><h3>Small crews</h3><p>Independent budgets, tight teams and full creative control from script to final grade.</p></div>
+        <div><h3>Lived stories</h3><p>We develop work from books, stage and real experience, with casts and crews that reflect it.</p></div>
+        <div><h3>Two homes</h3><p>Made in Scotland with links to Nigeria, for festival, broadcast and streaming audiences.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOUNDER -->
+  <section id="founder" aria-labelledby="founder-title">
+    <div class="shell founder">
+      <div class="portrait">[Portrait of Albrin Junior, 4:5]</div>
+      <div>
+        <h2 id="founder-title">Albrin Junior</h2>
+        <p class="role">Founder and managing director. Writer, director, producer.</p>
+        <p>Albrin Junior is a Nigerian author and filmmaker based in Glasgow. His collection of short stories, <em>From Glasgow Without Love</em>, is set between the two places and deals with identity, migration and displacement.</p>
+        <p>He adapted the book into a short film as writer, director and producer. His earlier short, <em>Hadassah</em>, screened at festivals in the UK and Nigeria.</p>
+        <blockquote>“I felt this narrative could travel further through visual storytelling.”<cite>Albrin Junior, in The Nollywood Reporter</cite></blockquote>
+        <div class="books">
+          <h3>Books by Albrin Junior</h3>
+          <div class="shelf">
+            <figure>
+              <img src="img/from-glasgow-without-love.jpg" alt="Cover of From Glasgow Without Love by Albrin Junior" loading="lazy">
+              <figcaption><b>From Glasgow Without Love</b>“An important new voice in contemporary fiction.” Dr Zoë Strachan</figcaption>
+            </figure>
+            <figure>
+              <img src="img/lust-and-seduction.jpg" alt="Cover of What You Need to Know in Lust &amp; Seduction by Albrin Junior" loading="lazy">
+              <figcaption><b>What You Need to Know in Lust &amp; Seduction</b></figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process" aria-labelledby="process-title" style="padding-top:0">
+    <div class="shell">
+      <h2 id="process-title">How a film gets made with us</h2>
+      <p class="lede">We can join at any stage, or take a project the whole way through.</p>
+      <ol class="schedule" style="list-style:none;padding-left:0">
+        <li class="stage"><span class="n">Stage 1</span><h3>Development</h3><p>Script, adaptation rights, budget and the package you need to raise finance.</p></li>
+        <li class="stage"><span class="n">Stage 2</span><h3>Pre-production</h3><p>Casting, crew, locations and a schedule that fits an independent budget.</p></li>
+        <li class="stage"><span class="n">Stage 3</span><h3>Production</h3><p>The shoot, on cinema cameras, with a crew that has worked together before.</p></li>
+        <li class="stage"><span class="n">Stage 4</span><h3>Post and release</h3><p>Edit, colour, sound and festival strategy through to delivery.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <div class="shell">
+      <div>
+        <h2 id="contact-title">Start a conversation</h2>
+        <p>Co-productions, commissions, casting, distribution or press.</p>
+        <a class="mail" href="mailto:hello@yourdomain.co.uk">[hello@yourdomain.co.uk]</a>
+        <div class="where">
+          <div><h3>Studio</h3><p>Rev Media Ltd<br>[Street address]<br>Glasgow [Postcode]</p></div>
+          <div><h3>Phone</h3><p>[+44 0000 000000]</p><h3 style="margin-top:18px">Replies</h3><p>Within [2] working days</p></div>
+        </div>
+      </div>
+      <!-- Connect to Formspree, Tally or a Cloudflare Worker to make this send -->
+      <form id="enquiry" novalidate>
+        <div class="pair">
+          <div><label for="f-name">Name</label><input id="f-name" name="name" autocomplete="name" required></div>
+          <div><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+        </div>
+        <div><label for="f-type">What's it about?</label>
+          <select id="f-type" name="type">
+            <option>A co-production</option><option>A commissioned film</option>
+            <option>Casting or crew</option><option>Distribution</option><option>Press</option><option>Something else</option>
+          </select>
+        </div>
+        <div><label for="f-msg">Message</label><textarea id="f-msg" name="message" required></textarea></div>
+        <button class="send" type="submit">Send message</button>
+        <p class="status" id="status" role="status"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="shell">
+    <p class="billing"><b>Rev Media Ltd</b> presents independent film from Glasgow · <b>written and directed by</b> Albrin Junior · <b>produced in</b> Scotland · <b>for audiences</b> everywhere</p>
+    <div class="legal">
+      <span>© <span id="yr"></span> Rev Media Ltd. Registered in Scotland, company no. [SC000000].</span>
+      <span class="social"><a href="#">Instagram</a><a href="#">Vimeo</a><a href="#">LinkedIn</a></span>
+    </div>
+  </div>
+</footer>
+
+<dialog id="reel" aria-label="Showreel">
+  <button class="close" data-close>Close</button>
+  <div class="reel" id="reel-slot"></div>
+</dialog>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // open the letterbox once the page has painted
+  requestAnimationFrame(() => setTimeout(() => document.body.classList.add('open'), reduce ? 0 : 250));
+
+  // running timecode, 24fps
+  const tc = document.getElementById('tc'); let f = 0;
+  if (!reduce) setInterval(() => { f++; const s=Math.floor(f/24), p=n=>String(n).padStart(2,'0');
+    tc.textContent = `${p(Math.floor(s/3600))}:${p(Math.floor(s/60)%60)}:${p(s%60)}:${p(f%24)}`; }, 1000/24);
+
+  // header turns solid after the hero
+  const top = document.getElementById('top');
+  addEventListener('scroll', () => top.classList.toggle('solid', scrollY > 60), {passive:true});
+
+  // mobile menu
+  const burger = document.querySelector('.burger'), nav = document.getElementById('nav');
+  burger.addEventListener('click', () => { const o = nav.classList.toggle('open'); burger.setAttribute('aria-expanded', o); burger.textContent = o ? 'Close' : 'Menu'; });
+  nav.addEventListener('click', e => { if (e.target.tagName === 'A') { nav.classList.remove('open'); burger.setAttribute('aria-expanded', false); burger.textContent = 'Menu'; } });
+
+  // film index: key art follows the cursor
+  const peek = document.getElementById('peek'), pimg = peek.querySelector('img');
+  document.querySelectorAll('[data-img]').forEach(row => {
+    new Image().src = row.dataset.img; // preload so the poster appears instantly
+    row.addEventListener('mouseenter', () => { pimg.src = row.dataset.img; peek.classList.add('on'); });
+    row.addEventListener('mouseleave', () => peek.classList.remove('on'));
+    row.addEventListener('mousemove', e => { peek.style.left = e.clientX + 'px'; peek.style.top = e.clientY + 'px'; });
+  });
+
+  // muted background snippet from YouTube (skipped for reduced motion)
+  const bgv = document.getElementById('bgv'), vid = bgv.dataset.id;
+  if (!reduce) {
+    const q = new URLSearchParams({autoplay:1, mute:1, controls:0, loop:1, playlist:vid, playsinline:1,
+      modestbranding:1, rel:0, disablekb:1, iv_load_policy:3, start:bgv.dataset.start, end:bgv.dataset.end});
+    const f = document.createElement('iframe');
+    f.src = `https://www.youtube-nocookie.com/embed/${vid}?${q}`;
+    f.allow = 'autoplay; encrypted-media'; f.tabIndex = -1; f.title = '';
+    f.addEventListener('load', () => setTimeout(() => bgv.classList.add('ready'), 900));
+    bgv.appendChild(f);
+  }
+
+  // showreel dialog: full video with sound, loaded only when opened
+  const dlg = document.getElementById('reel'), slot = document.getElementById('reel-slot');
+  document.querySelector('[data-reel]').addEventListener('click', () => {
+    slot.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&rel=0&playsinline=1" title="Rev Media showreel" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+    dlg.showModal();
+  });
+  dlg.addEventListener('close', () => { slot.innerHTML = ''; });
+  dlg.querySelector('[data-close]').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+
+  // form placeholder with real validation messages
+  const form = document.getElementById('enquiry'), status = document.getElementById('status');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const bad = [...form.querySelectorAll('[required]')].find(i => !i.checkValidity());
+    if (bad) { status.textContent = bad.type === 'email' ? 'Enter an email address like name@example.com.' : `Add your ${bad.name} to send.`; bad.focus(); return; }
+    status.textContent = 'Form not connected yet. Email us directly for now.';
+  });
+
+  document.getElementById('yr').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
 </html>
